@@ -1,0 +1,34 @@
+CFLAGS:=-c -Wall -Weffc++ -g -std=c++11 -Iinclude
+LDFLAGS:=-lboost_system -lpthread
+
+# Default target
+all: bin/StompEMIClient
+
+# Build the final executable
+bin/StompEMIClient: bin/ConnectionHandler.o bin/StompClient.o bin/event.o bin/StompProtocol.o
+	g++ -o bin/StompEMIClient bin/ConnectionHandler.o bin/StompClient.o bin/event.o bin/StompProtocol.o $(LDFLAGS)
+
+# Compile ConnectionHandler.cpp into an object file
+bin/ConnectionHandler.o: src/ConnectionHandler.cpp
+	g++ $(CFLAGS) -o bin/ConnectionHandler.o src/ConnectionHandler.cpp
+
+# Compile echoClient.cpp into an object file (if needed)
+bin/echoClient.o: src/echoClient.cpp
+	g++ $(CFLAGS) -o bin/echoClient.o src/echoClient.cpp
+
+# Compile event.cpp into an object file
+bin/event.o: src/event.cpp
+	g++ $(CFLAGS) -o bin/event.o src/event.cpp
+
+# Compile StompClient.cpp into an object file
+bin/StompClient.o: src/StompClient.cpp
+	g++ $(CFLAGS) -o bin/StompClient.o src/StompClient.cpp
+
+# Compile StompProtocol.cpp into an object file
+bin/StompProtocol.o: src/StompProtocol.cpp
+	g++ $(CFLAGS) -o bin/StompProtocol.o src/StompProtocol.cpp
+
+# Clean target to remove all compiled files and the executable
+.PHONY: clean
+clean:
+	rm -f bin/*.o bin/StompEMIClient
